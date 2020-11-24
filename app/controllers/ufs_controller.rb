@@ -1,3 +1,8 @@
+class ApplicationController < ActionController::API
+    include ActionController::MimeResponds
+end
+
+
 class UfsController < ApplicationController
     def by_date
         #Levantar valor de UF
@@ -10,7 +15,7 @@ class UfsController < ApplicationController
         @cliente = Log.find_by(name: request.headers['X-CLIENTE']) #Forma 2
 
         if @valor.nil?
-            @respuesta = "Fecha mal ingresada o fuera de rango"
+            @respuesta = "Fecha mal ingresada o fuera de rango. Prueba con una fecha desde el 2020-01-01 hasta el 2020-02-29"
         else
             if @cliente.nil?
                 @respuesta = "No eres cliente aún, debes solicitar ser ingresado a la Base de datos. PD: PRUEBA CON X-CLIENTE: Gianca o Juan"
@@ -23,6 +28,11 @@ class UfsController < ApplicationController
                 @respuesta = "El valor de la UF al #{@date} es de $#{@valor.value} CLP"     
             end
         end
+
+        respond_to do |format|
+            format.js
+        end
+
         render json: @respuesta
     end
 end
